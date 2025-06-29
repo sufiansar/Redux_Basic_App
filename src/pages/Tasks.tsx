@@ -1,15 +1,30 @@
 import { updateTask, useSelectTask } from "@/Redux/Feature/taskSlice";
+
 import TaskCard from "./task/TaskCard";
+
+import * as React from "react";
+import { Progress } from "@/components/ui/progress";
 
 import type { Itask } from "@/interface/type";
 import { useAppDispatch, useAppSelector } from "@/Redux/hook/hook";
 import { AddTaskModel } from "./task/AddTask";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useGetTasksQuery } from "@/Redux/api/baseApi";
 
 const Task = () => {
+  const [progress, setProgress] = React.useState(13);
+  React.useEffect(() => {
+    const timer = setTimeout(() => setProgress(66), 500);
+    return () => clearTimeout(timer);
+  }, []);
   const tasks = useAppSelector(useSelectTask);
-  // console.log("tasks: ", tasks);
+  console.log("tasks: ", tasks);
   const dispatch = useAppDispatch();
+  const { data, isLoading, isError } = useGetTasksQuery(undefined);
+  console.log(data, isLoading, isError);
+  if (isLoading) {
+    return <Progress value={progress} className="w-[60%]" />;
+  }
 
   return (
     <div>
@@ -47,7 +62,10 @@ const Task = () => {
           <AddTaskModel />
         </div>
       </div>
-      {tasks.map((task: Itask) => (
+      {/* {tasks.map((task: Itask) => (
+        <TaskCard key={task.id} task={task} />
+      ))} */}
+      {data.tasks.map((task: Itask) => (
         <TaskCard key={task.id} task={task} />
       ))}
     </div>

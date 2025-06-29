@@ -34,6 +34,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import type { Itask } from "@/interface/type";
 import { cn } from "@/lib/utils";
+import { useCreateTaskMutation } from "@/Redux/api/baseApi";
 import { addTask } from "@/Redux/Feature/taskSlice";
 import { userSelect } from "@/Redux/Feature/userSlice";
 import { useAppDispatch, useAppSelector } from "@/Redux/hook/hook";
@@ -44,16 +45,23 @@ import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 // import { Link } from "react-router";
 
 export function AddTaskModel() {
+  const [createTask, { data, isLoading, isError }] = useCreateTaskMutation();
   const [open, setopen] = useState(false);
   const dispatch = useAppDispatch();
   const form = useForm({});
 
   const users = useAppSelector(userSelect);
 
-  const handleSubmit: SubmitHandler<FieldValues> = (data) => {
+  const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const taskData = {
+      ...data,
+      iscompleted: false,
+    };
+    const res = await createTask(taskData);
+    console.log(res);
     dispatch(addTask(data as Itask));
     setopen(false);
-
+    console.log("Inside Submitaion", data);
     form.reset();
   };
 
