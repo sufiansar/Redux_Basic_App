@@ -1,11 +1,17 @@
-type Priority = "high" | "medium" | "low";
+export type Priority = "high" | "medium" | "low";
 
 export interface Itask {
-  id: number;
+  id: string;
   name: string;
-  title: string; // Note: Did you mean "title" instead of "titel"?
+  title: string;
   description: string;
-  dueDate: string; // Consider using Date type if working with actual dates
+  dueDate: string;
   iscompleted: boolean;
   priority: Priority;
+  assignto: string | null;
+}
+
+export interface Iuser {
+  name: string;
+  id: string;
 }
